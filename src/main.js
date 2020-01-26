@@ -16,7 +16,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as appbar from './appbar';
 import HomePage from './homepage';
 import VotePage from './votepage';
-
+import ResultsPage from './resultspage';
 
 const theme = createMuiTheme({
     palette: {
@@ -74,6 +74,14 @@ const App = withStyles(styles)((props) => (
                     </>
                 )
             }} />
+            <Route path='/results' render={ () => {
+                return(
+                    <>
+                        <appbar.AppBar theme={ props.theme } { ...props.state } />
+                        <ResultsPage />
+                    </>
+                )
+            }} />
         </MuiThemeProvider>
     </BrowserRouter>
 ));
@@ -98,7 +106,6 @@ const main = (rootComponentClass, appTheme) => {
             </MuiThemeProvider>
         </Provider>
     )
-
 }
 
 render(main(App, theme), document.getElementById('react-app'))
