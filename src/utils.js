@@ -53,3 +53,19 @@ ButtonLink.propTypes = {
     text: PropTypes.string.isRequired,
     to: PropTypes.string.isRequired,
 };
+
+
+export const fetchJson = function* (url, config = {}) {
+    if (config.headers) {
+        config.headers.Accept = 'application/json'
+
+    } else {
+        config.headers = {Accept: 'application/json'}
+    }
+
+  return yield fetch(url, config).then(resp => resp.json().then(json => {
+        if (resp.ok && !json.error) {
+            return json
+        }
+    }))
+}

@@ -1,6 +1,5 @@
 // React.
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { combineReducers } from 'redux';
 
 // Redux and sagas.

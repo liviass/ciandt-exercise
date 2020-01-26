@@ -5,7 +5,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
+import createSagaMiddleware, { buffers } from 'redux-saga'
+import { all, call, delay, put, take, actionChannel } from 'redux-saga/effects'
+
 
 // Material-UI styling.
 import { blue, grey, yellow, brown, red } from '@material-ui/core/colors';
@@ -14,8 +17,9 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 
 // Top5 Music.
 import * as appbar from './appbar';
+import * as votepage from './votepage';
+
 import HomePage from './homepage';
-import VotePage from './votepage';
 import ResultsPage from './resultspage';
 
 const theme = createMuiTheme({
@@ -70,7 +74,7 @@ const App = withStyles(styles)((props) => (
                 return(
                     <>
                         <appbar.AppBar theme={ props.theme } { ...props.state } />
-                        <VotePage />
+                        <votepage.VotePage />
                     </>
                 )
             }} />
@@ -86,18 +90,41 @@ const App = withStyles(styles)((props) => (
     </BrowserRouter>
 ));
 
+const rootSaga = function* () {
+    yield all([
+        votepage.rootSaga(),
+    ])
+}
+
+
+const composeFun = () => {
+    if (process.env.NODE_ENV != 'production') {
+        if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+            const cfg = {name: 'Top5Radio'}
+
+            return window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(cfg)
+        }
+    }
+
+    return compose
+}
+
 
 const main = (rootComponentClass, appTheme) => {
+    const sagas = createSagaMiddleware()
     const store = createStore(
         combineReducers({
             appbar: appbar.appbarReducer,
+            votepage: votepage.votepageReducer,
         }),
 
-        // TODO: Only show this in Development environment.
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+        composeFun()(applyMiddleware(sagas))
     )
 
     const state = store.getState()
+
+    // Sagas must run as early as possible, or they might miss actions.
+    sagas.run(rootSaga)
 
     return (
         <Provider store={ store }>

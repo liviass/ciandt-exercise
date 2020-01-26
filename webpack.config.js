@@ -1,4 +1,7 @@
+// Configurações para ambiente de desenvolvimento.
+
 const path = require('path');
+const webpack = require('webpack')
 const htmlPlugin = require('html-webpack-plugin')
 const copyPlugin = require('copy-webpack-plugin')
 
@@ -40,6 +43,13 @@ module.exports = {
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': '"development"',
+                'HOST': '""'  // TODO: Inserir host para node.
+            }
+        }),
+
         // Copy files to the root of the output directory.
         new copyPlugin([
             'favicon-16x16.png',
