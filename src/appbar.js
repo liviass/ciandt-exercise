@@ -1,5 +1,6 @@
 // React.
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { combineReducers } from 'redux';
 
 // Redux and sagas.
@@ -16,16 +17,17 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 // Material-UI icons.
 import MenuIcon from '@material-ui/icons/Menu';
-import InboxIcon from '@material-ui/icons/Inbox';
-import MailIcon from '@material-ui/icons/Mail';
 
 // Material-UI styling.
 import { withStyles } from '@material-ui/core/styles';
+
+// Top5 Radio.
+import { ListItemLink } from './utils'
+
 
 // Redux and Sagas
 const openDrawer = () => (
@@ -59,69 +61,44 @@ export const appbarReducer = combineReducers({
 })
 
 
-
 // Style.
 const sheet = theme => ({
+    appbar: {
+        height: 64
+    },
+
     drawer: {
-        padding: theme.spacing(1),
+        padding: theme.spacing(1)
     }
 })
 
 
 // Components.
-const sideList = props => (
-    <div
-      role="presentation"
-      onClick={ props.closeDrawer }
-      onKeyDown={ props.closeDrawer }
-    >
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-);
-
-
 export class AppBar extends React.Component {
     componentWillUnmount() {
         this.props.handleUnmount()
     }
 
     render () {
-        console.log(this.props)
+        const { classes, ...props } = this.props
+
         return (
-            <>
-                <AppBarMUI position="static">
+            <React.Fragment>
+                <AppBarMUI position="static" className={ classes.appbar }>
                     <Toolbar>
-                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={ this.props.openDrawer} >
+                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={ props.openDrawer } >
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" style={ {flexGrow: 1} }>Top5 Music</Typography>
                     </Toolbar>
                 </AppBarMUI>
 
-                <SwipeableDrawer open={ this.props.drawerOpen } onClose={ this.props.closeDrawer } onOpen={ this.props.openDrawer }>
-                    <div className={ this.props.classes.drawer } role="presentation" onClick={ this.props.closeDrawer } onKeyDown={ this.props.closeDrawer }>
+                <SwipeableDrawer open={ props.drawerOpen } onClose={ props.closeDrawer } onOpen={ props.openDrawer }>
+                    <div className={ classes.drawer } role="presentation" onClick={ props.closeDrawer } onKeyDown={ props.closeDrawer }>
                         <Typography variant="h6">Top5 Radio</Typography>
 
                         <List>
-                            <ListItem button key="meutop5" >
-                                <ListItemText primary={ "Meu Top 5" } />
-                            </ListItem>
+                            <ListItemLink to="/vote" primary="Vote no Top5" />
                         </List>
 
                         <Divider />
@@ -138,7 +115,7 @@ export class AppBar extends React.Component {
 
                     </div>
                 </SwipeableDrawer>
-            </>
+            </React.Fragment>
         )
     }
 }
@@ -172,4 +149,3 @@ AppBar = connect(
         }
     })
 )(AppBar)
-

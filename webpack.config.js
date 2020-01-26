@@ -7,11 +7,20 @@ module.exports = {
 
     entry: './src/main.js',
 
+    devtool: 'inline-source-map',
+
+    devServer: {
+        contentBase: './distdev',
+        historyApiFallback: true,
+        disableHostCheck: true
+    },
+
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, 'distdev'),
         publicPath: '/'
     },
+
     module: {
         rules: [
             {

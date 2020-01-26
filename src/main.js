@@ -13,8 +13,9 @@ import { createMuiTheme, withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
 // Top5 Music.
-import HomePage from './homepage'
-import * as appbar from './appbar'
+import * as appbar from './appbar';
+import HomePage from './homepage';
+import VotePage from './votepage';
 
 
 const theme = createMuiTheme({
@@ -56,12 +57,20 @@ const styles = {
 const App = withStyles(styles)((props) => (
     <BrowserRouter>
         <MuiThemeProvider theme={ theme }>
-            <Route path='/' exact
-            render={() => {
+            <Route path='/' exact render={() => {
                 return(
                     <>
-                    <appbar.AppBar theme={ props.theme } { ...props.state } />
-                    <HomePage />
+                        <appbar.AppBar theme={ props.theme } { ...props.state } />
+                        <HomePage />
+                    </>
+                )
+            }} />
+
+            <Route path='/vote' render={ () => {
+                return(
+                    <>
+                        <appbar.AppBar theme={ props.theme } { ...props.state } />
+                        <VotePage />
                     </>
                 )
             }} />
@@ -69,11 +78,16 @@ const App = withStyles(styles)((props) => (
     </BrowserRouter>
 ));
 
+
 const main = (rootComponentClass, appTheme) => {
     const store = createStore(
         combineReducers({
-        appbar: appbar.appbarReducer,
-    }))
+            appbar: appbar.appbarReducer,
+        }),
+
+        // TODO: Only show this in Development environment.
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
 
     const state = store.getState()
 
