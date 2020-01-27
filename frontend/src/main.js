@@ -6,8 +6,8 @@ import { render } from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
-import createSagaMiddleware, { buffers } from 'redux-saga'
-import { all, call, delay, put, take, actionChannel } from 'redux-saga/effects'
+import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects';
 
 
 // Material-UI styling.
@@ -18,9 +18,9 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 // Top5 Music.
 import * as appbar from './appbar';
 import * as votepage from './votepage';
+import * as resultspage from './resultspage';
 
 import HomePage from './homepage';
-import ResultsPage from './resultspage';
 
 const theme = createMuiTheme({
     palette: {
@@ -82,7 +82,7 @@ const App = withStyles(styles)((props) => (
                 return(
                     <>
                         <appbar.AppBar theme={ props.theme } { ...props.state } />
-                        <ResultsPage />
+                        <resultspage.ResultsPage />
                     </>
                 )
             }} />
@@ -93,6 +93,7 @@ const App = withStyles(styles)((props) => (
 const rootSaga = function* () {
     yield all([
         votepage.rootSaga(),
+        resultspage.rootSaga()
     ])
 }
 
@@ -116,6 +117,7 @@ const main = (rootComponentClass, appTheme) => {
         combineReducers({
             appbar: appbar.appbarReducer,
             votepage: votepage.votepageReducer,
+            resultspage: resultspage.resultsPageReducer
         }),
 
         composeFun()(applyMiddleware(sagas))

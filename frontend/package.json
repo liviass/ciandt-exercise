@@ -1,5 +1,5 @@
 {
-  "name": "ciandt",
+  "name": "ciandt_frontend",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/liviass/ciandt-exercise.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lívia Simões <livias.simoes36@gmail.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/liviass/ciandt-exercise/issues"

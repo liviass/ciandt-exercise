@@ -6,7 +6,7 @@ import React from 'react';
 // Redux and sagas.
 import { combineReducers } from 'redux';
 import { connect } from 'react-redux';
-import { all, call, delay, put, take, actionChannel } from 'redux-saga/effects'
+import { all, call, put, take } from 'redux-saga/effects'
 
 // Material-UI components.
 import TextField from '@material-ui/core/TextField';
@@ -54,14 +54,18 @@ const sendTop5 = data => (
     {type: 'votepage/SEND_TOP5', data}
 )
 
+const clearForm = () => (
+    {type: 'votepage/CLEAR_FORM'}
+)
+
 const clearState = () => (
     {type: 'votepage/CLEAR_STATE'}
 )
 
+
 const state0 = {
     nickname: '',
     songsList: [], // lista de músicas para escolher.
-
     selectedSongs: { // Músicas selecionadas.
         1: null,
         2: null,
@@ -69,15 +73,6 @@ const state0 = {
         4: null,
         5: null,
     },
-
-    songs: { // Campos input.
-        1: '',
-        2: '',
-        3: '',
-        4: '',
-        5: '',
-    },
-
     messageShown: false
 }
 
@@ -94,10 +89,12 @@ export const votepageReducer = combineReducers({
             return state
         }
     },
-
     nickname: (state = state0.nickname, action) => {
         if (action.type == 'votepage/SET_NICKNAME') {
             return action.value
+
+        } else if (action.type == 'votepage/CLEAR_FORM') {
+            return state0.nickname
 
         } else if (action.type == 'votepage/CLEAR_STATE') {
             return state0.nickname
@@ -106,22 +103,12 @@ export const votepageReducer = combineReducers({
             return state
         }
     },
-
-    songs: (state = state0.songs, action) => {
-        if (action.type == 'votepage/SET_SONG') {
-            return {...state, [action.position]: action.value}
-
-        } else if (action.type == 'votepage/CLEAR_STATE') {
-            return state0.songs
-
-        } else {
-            return state
-        }
-    },
-
     selectedSongs: (state = state0.selectedSongs, action) => {
         if (action.type == 'votepage/SELECT_SONG') {
             return {...state, [action.position]: action.value}
+
+        } else if (action.type == 'votepage/CLEAR_FORM') {
+            return state0.selectedSongs
 
         } else if (action.type == 'votepage/CLEAR_STATE') {
             return state0.selectedSongs
@@ -130,7 +117,6 @@ export const votepageReducer = combineReducers({
             return state
         }
     },
-
     messageShown: (state = state0.messageShown, action) => {
         if (action.type == 'votepage/SHOW_MESSAGE') {
             return true
@@ -149,14 +135,14 @@ export const votepageReducer = combineReducers({
 
 
 const getSongsSaga = function* () {
-    const getStats = () => {
-        return fetchJson(`${process.env.HOST}/songs`)
+    const getSongs = () => {
+        return fetchJson(`${process.env.HOST}/songs/list`)
     }
 
     while (true) {
         yield take('votepage/GET_SONGS.BEGIN')
 
-        const data = yield call(getStats)
+        const data = yield call(getSongs)
 
         yield put({ type: 'votepage/GET_SONGS.END', songs: data })
     }
@@ -164,14 +150,25 @@ const getSongsSaga = function* () {
 
 
 const sendTop5Saga = function* () {
-    while (true) {
-        const data = yield take('votepage/SEND_TOP5')
+    const postTop5 = ({ nickname, songs }) => {
+        const post = {method: 'post'}
 
-        yield put(clearState()) // Limpa a tela e mostra a mensagenzinha com o "Enviado com sucesso!".
+        post.headers = {'Content-Type': 'application/json'}
+        post.body = JSON.stringify({nickname, songs})
+
+        return fetchJson(`${process.env.HOST}/votes/add`, post)
+    }
+
+    while (true) {
+        // TODO: Treat possible errors returned from server request.
+        const { data } = yield take('votepage/SEND_TOP5')
+
+        yield call(postTop5, data)
+
         yield put(showMessage())
+        yield put(clearForm())
     }
 }
-
 
 export const rootSaga = function* () {
     yield all([
@@ -179,7 +176,6 @@ export const rootSaga = function* () {
         sendTop5Saga()
     ])
 }
-
 
 // Style.
 const sheet = theme => ({
@@ -214,6 +210,10 @@ export class VotePage extends React.Component {
         this.props.handleMount()
     }
 
+    componentWillUnmount() {
+        this.props.handleUnmount()
+    }
+
     render () {
         const { classes, ...props } = this.props
 
@@ -229,6 +229,8 @@ export class VotePage extends React.Component {
                     { [1, 2, 3, 4, 5].map( index => (
                         <Autocomplete key={ index } id={`song${index}`} className="input-song"
                             autoComplete
+                            autoSelect
+                            clearText="Limpar"
                             getOptionLabel={ option => `${option.name} - ${option.artists}`}
                             getOptionSelected={ (option, value) => { option._id === value._id }}
                             getOptionDisabled={ option => props.isOptionDisabled(option, props.selectedSongs) }
@@ -246,7 +248,7 @@ export class VotePage extends React.Component {
                         />
                     )) }
 
-                    <Button variant="contained" color="secondary" className={ classes['send-button'] } onClick={ () => props.sendTop5(props.selectedSongs) }>Enviar</Button>
+                    <Button variant="contained" color="secondary" className={ classes['send-button'] } onClick={ () => props.sendTop5(props.nickname, props.selectedSongs) }>Enviar</Button>
 
                 </div>
                 <Snackbar open={ props.messageShown } autoHideDuration={ 3000 } onClose={ () => props.displayMessage(false) }>
@@ -266,11 +268,12 @@ VotePage = connect(
         handleMount() {
             dispatch(getSongs())
         },
-
+        handleUnmount() {
+            dispatch(clearState())
+        },
         setNickname(value) {
             dispatch(setNickname(value))
         },
-
         isOptionDisabled(option, selected) {
             let flag = false
 
@@ -282,15 +285,12 @@ VotePage = connect(
 
             return flag
         },
-
         setSong(position, value) {
             dispatch(setSong(position, value))
         },
-
         selectSong(position, value) {
             dispatch(selectSong(position, value))
         },
-
         displayMessage(value) {
             if (value) {
                 dispatch(showMessage())
@@ -299,8 +299,15 @@ VotePage = connect(
                 dispatch(hideMessage())
             }
         },
+        sendTop5(nickname, songs) {
+            const data = {nickname, songs: []}
 
-        sendTop5(data) {
+            data.songs.push(songs[1]._id)
+            data.songs.push(songs[2]._id)
+            data.songs.push(songs[3]._id)
+            data.songs.push(songs[4]._id)
+            data.songs.push(songs[5]._id)
+
             dispatch(sendTop5(data))
         }
     })

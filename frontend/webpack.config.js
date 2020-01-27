@@ -33,8 +33,6 @@ module.exports = {
                     options: {
                         plugins: [
                             ['@babel/plugin-transform-react-jsx', {useBuiltIns: true}],
-                            //['@babel/plugin-proposal-class-properties', {useBuiltIns: true}],
-                            //['@babel/plugin-proposal-object-rest-spread', {useBuiltIns: true}]
                         ]
                     }
                 }]
@@ -46,7 +44,7 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': '"development"',
-                'HOST': '""'  // TODO: Inserir host para node.
+                'HOST': '"http://0.0.0.0:5000"'
             }
         }),
 
