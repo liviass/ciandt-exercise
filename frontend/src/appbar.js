@@ -20,12 +20,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 // Material-UI icons.
 import MenuIcon from '@material-ui/icons/Menu';
+import RadioIcon from '@material-ui/icons/Radio';
 
 // Material-UI styling.
 import { withStyles } from '@material-ui/core/styles';
 
 // Top5 Radio.
-import { ListItemLink } from './utils'
+import { ButtonLink } from './utils'
 
 
 // Redux and Sagas
@@ -65,9 +66,15 @@ const sheet = theme => ({
     appbar: {
         height: 64
     },
-
     drawer: {
-        padding: theme.spacing(1)
+        padding: theme.spacing(1),
+        '& .title > svg': {
+            verticalAlign: 'text-bottom',
+            marginRight: theme.spacing(1)
+        },
+        '& .subtitle': {
+            fontWeight: 'bold'
+        }
     }
 })
 
@@ -88,30 +95,60 @@ export class AppBar extends React.Component {
                         <IconButton edge="start" color="inherit" aria-label="menu" onClick={ props.openDrawer } >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" style={ {flexGrow: 1} }>Top5 Music</Typography>
+                        <Typography variant="h6" color="inherit" style={ {flexGrow: 1} }>Top5 Radio</Typography>
                     </Toolbar>
                 </AppBarMUI>
 
                 <SwipeableDrawer open={ props.drawerOpen } onClose={ props.closeDrawer } onOpen={ props.openDrawer }>
                     <div className={ classes.drawer } role="presentation" onClick={ props.closeDrawer } onKeyDown={ props.closeDrawer }>
-                        <Typography variant="h6">Top5 Radio</Typography>
-
-                        <List>
-                            <ListItemLink to="/vote" primary="Vote no Top5" />
-                        </List>
+                        <Typography variant="h6" className="title"color="textSecondary"><RadioIcon />Top5 Radio</Typography>
 
                         <Divider />
-                        <Typography variant="subtitle1">Referências</Typography>
+
+                        <List>
+                            <ButtonLink variant="contained" color="primary" to="/vote" text="Vote no Top 5"/>
+                        </List>
+
+                        <Typography variant="subtitle1" color="primary" className="subtitle">Referências</Typography>
 
                         <List>
                             <ListItem button component="a" key="reactjs" href="https://reactjs.org/docs" target="_blank">
-                                <ListItemText primary={ "React JS" } />
+                                React JS
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://reacttraining.com/react-router/" target="_blank">
+                                React Router
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://redux.js.org/" target="_blank">
+                                Redux
                             </ListItem>
                             <ListItem button component="a" key="materialui" href="https://material-ui.com" target="_blank">
-                                <ListItemText primary={ "Material UI" } />
+                                Material UI
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://webpack.js.org/" target="_blank">
+                                Webpack
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://nodejs.org" target="_blank">
+                                Node.js
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://expressjs.com" target="_blank">
+                                Express
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://expressjs.com/en/resources/middleware/cors.html" target="_blank">
+                                Express Cors
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://www.mongodb.com/cloud" target="_blank">
+                                MongoDB
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://mongoosejs.com/docs/" target="_blank">
+                                Mongoose
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://docs.docker.com/" target="_blank">
+                                Docker
+                            </ListItem>
+                            <ListItem button component="a" key="materialui" href="https://docs.docker.com/compose/" target="_blank">
+                                Docker Compose
                             </ListItem>
                         </List>
-
                     </div>
                 </SwipeableDrawer>
             </React.Fragment>

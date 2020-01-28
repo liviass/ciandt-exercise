@@ -137,7 +137,7 @@ export class ResultsPage extends React.Component {
 
                     <List>
                         { props.top5List.map(({ name, artists, votes }, index) => {
-                            console.log(index)
+
                             return (
                                 <ListItem key={ index }>
                                     <ListItemAvatar>

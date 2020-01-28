@@ -43,7 +43,7 @@ export function ButtonLink(props) {
     );
 
     return (
-        <Button variant="contained" color="secondary" component={ renderLink }>
+        <Button variant={ props.variant } color={ props.color } component={ renderLink }>
           { text }
         </Button>
     );
