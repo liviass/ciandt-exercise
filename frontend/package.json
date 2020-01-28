@@ -1,12 +1,12 @@
 {
   "name": "ciandt_frontend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Application for CI&T hiring process.",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rm -rf distdev; webpack-dev-server --open",
-    "build": "webpack"
+    "start": "rm -rf distdev; webpack-dev-server --host 0.0.0.0",
+    "build": "rm -rf dist; webpack --config ./webpack.config.js"
   },
   "repository": {
     "type": "git",

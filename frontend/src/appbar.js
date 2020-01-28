@@ -16,7 +16,8 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 // Material-UI icons.
 import MenuIcon from '@material-ui/icons/Menu';
@@ -38,6 +39,14 @@ const closeDrawer = () => (
     {type: 'appbar/CLOSE_DRAWER'}
 )
 
+const showMessage= ()  => (
+    {type: 'appbar/SHOW_MESSAGE'}
+)
+
+const hideMessage = ()  => (
+    {type: 'appbar/HIDE_MESSAGE'}
+)
+
 const clearState = () => (
     {type: 'appbar/CLEAR_STATE'}
 )
@@ -52,6 +61,20 @@ export const appbarReducer = combineReducers({
             return false
 
         } else if (action.type == 'appbar/CLEAR_STATE') {
+            return false
+
+        } else {
+            return state
+        }
+    },
+    messageShown: (state = false, action) => {
+        if (action.type == 'appbar/SHOW_MESSAGE') {
+            return true
+
+        } else if (action.type == 'votepage/REDIRECT_TO_HOMEPAGE') {
+            return true
+
+        } else if (action.type == 'appbar/HIDE_MESSAGE') {
             return false
 
         } else {
@@ -151,6 +174,14 @@ export class AppBar extends React.Component {
                         </List>
                     </div>
                 </SwipeableDrawer>
+
+                { props.messageShown &&
+                    <Snackbar open={ props.messageShown } autoHideDuration={ 3000 } onClose={ () => props.displayMessage(false) }>
+                        <Alert onClose={ () => props.displayMessage(false) } severity="success">
+                            Enviado com sucesso!
+                        </Alert>
+                    </Snackbar>
+                }
             </React.Fragment>
         )
     }
@@ -182,6 +213,14 @@ AppBar = connect(
             }
 
             dispatch(closeDrawer())
+        },
+        displayMessage(value) {
+            if (value) {
+                dispatch(showMessage())
+
+            } else {
+                dispatch(hideMessage())
+            }
         }
     })
 )(AppBar)

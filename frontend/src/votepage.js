@@ -2,11 +2,12 @@
 
 // React.
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 // Redux and sagas.
 import { combineReducers } from 'redux';
 import { connect } from 'react-redux';
-import { all, call, put, take } from 'redux-saga/effects'
+import { all, call, put, take } from 'redux-saga/effects';
 
 // Material-UI components.
 import TextField from '@material-ui/core/TextField';
@@ -14,8 +15,6 @@ import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
 
 // Material-UI styling.
 import { withStyles } from '@material-ui/core/styles';
@@ -29,33 +28,24 @@ const setNickname = value => (
     {type: 'votepage/SET_NICKNAME', value}
 )
 
-// Coloca valor no campo do input.
 const setSong = (position, value) => (
     {type: 'votepage/SET_SONG', position, value}
 )
+
 const selectSong = (position, value) => (
     {type: 'votepage/SELECT_SONG', position, value}
 )
 
-// Pega as músicas do banco de dados.
 const getSongs = () => (
     {type: 'votepage/GET_SONGS.BEGIN'}
-)
-
-const showMessage= ()  => (
-    {type: 'votepage/SHOW_MESSAGE'}
-)
-
-const hideMessage = ()  => (
-    {type: 'votepage/HIDE_MESSAGE'}
 )
 
 const sendTop5 = data => (
     {type: 'votepage/SEND_TOP5', data}
 )
 
-const clearForm = () => (
-    {type: 'votepage/CLEAR_FORM'}
+const navHomepage = () => (
+    {type: 'votepage/REDIRECT_TO_HOMEPAGE'}
 )
 
 const clearState = () => (
@@ -73,7 +63,7 @@ const state0 = {
         4: null,
         5: null,
     },
-    messageShown: false
+    redirected: false
 }
 
 
@@ -93,9 +83,6 @@ export const votepageReducer = combineReducers({
         if (action.type == 'votepage/SET_NICKNAME') {
             return action.value
 
-        } else if (action.type == 'votepage/CLEAR_FORM') {
-            return state0.nickname
-
         } else if (action.type == 'votepage/CLEAR_STATE') {
             return state0.nickname
 
@@ -107,9 +94,6 @@ export const votepageReducer = combineReducers({
         if (action.type == 'votepage/SELECT_SONG') {
             return {...state, [action.position]: action.value}
 
-        } else if (action.type == 'votepage/CLEAR_FORM') {
-            return state0.selectedSongs
-
         } else if (action.type == 'votepage/CLEAR_STATE') {
             return state0.selectedSongs
 
@@ -117,20 +101,17 @@ export const votepageReducer = combineReducers({
             return state
         }
     },
-    messageShown: (state = state0.messageShown, action) => {
-        if (action.type == 'votepage/SHOW_MESSAGE') {
+    redirected: (state = state0.redirected, action) => {
+        if (action.type == 'votepage/REDIRECT_TO_HOMEPAGE') {
             return true
 
-        } else if (action.type == 'votepage/HIDE_MESSAGE') {
-            return false
-
         } else if (action.type == 'votepage/CLEAR_STATE') {
-            return state0.messageShown
+            return state0.redirected
 
         } else {
             return state
         }
-    }
+    },
 })
 
 
@@ -140,6 +121,7 @@ const getSongsSaga = function* () {
     }
 
     while (true) {
+        // TODO: Treat possible errors returned from server request.
         yield take('votepage/GET_SONGS.BEGIN')
 
         const data = yield call(getSongs)
@@ -165,8 +147,7 @@ const sendTop5Saga = function* () {
 
         yield call(postTop5, data)
 
-        yield put(showMessage())
-        yield put(clearForm())
+        yield put(navHomepage())
     }
 }
 
@@ -215,7 +196,12 @@ export class VotePage extends React.Component {
     }
 
     render () {
-        const { classes, ...props } = this.props
+        const { classes, redirected, ...props } = this.props
+
+        // If the user already voted, redirect it to the homepage.
+        if (redirected) {
+            return <Redirect to="/" />
+        }
 
         return (
             <div className={ classes.page }>
@@ -249,13 +235,7 @@ export class VotePage extends React.Component {
                     )) }
 
                     <Button variant="contained" color="secondary" className={ classes['send-button'] } onClick={ () => props.sendTop5(props.nickname, props.selectedSongs) }>Enviar</Button>
-
                 </div>
-                <Snackbar open={ props.messageShown } autoHideDuration={ 3000 } onClose={ () => props.displayMessage(false) }>
-                    <Alert onClose={ () => props.displayMessage(false) } severity="success">
-                        Enviado com sucesso!
-                    </Alert>
-                </Snackbar>
             </div>
         )
     }
@@ -291,14 +271,6 @@ VotePage = connect(
         selectSong(position, value) {
             dispatch(selectSong(position, value))
         },
-        displayMessage(value) {
-            if (value) {
-                dispatch(showMessage())
-
-            } else {
-                dispatch(hideMessage())
-            }
-        },
         sendTop5(nickname, songs) {
             const data = {nickname, songs: []}
 
@@ -312,4 +284,3 @@ VotePage = connect(
         }
     })
 )(withStyles(sheet, {withTheme: true})(VotePage))
-

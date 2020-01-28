@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - 27017:27017
+
+  mongodb_seed:
+    image: mongodb_seed
+    container_name: mongodb_seed
+    build:
+      context: .
+      dockerfile: mongodb_seed.dockerfile
+    depends_on:
+      - mongo
+
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    depends_on:
+      - mongo
+    ports:
+     - 5000:5000
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./
+      dockerfile: frontend.dockerfile
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/home/src/top5_radio/:rw
+    ports:
+      - 8080:8080

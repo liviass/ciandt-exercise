@@ -1,6 +1,6 @@
 # Frontend - React + Redux.
 frontend/dist
-frontend/dist_dev
+frontend/distdev
 frontend/node_modules
 frontend/package-lock.json
 # Backend - Node.js.
