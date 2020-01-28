@@ -1,28 +1,28 @@
 // Tela com resultado da votação.
 
 // React.
-import React from 'react';
+import React from 'react'
 
 // Redux and sagas.
-import { combineReducers } from 'redux';
-import { connect } from 'react-redux';
-import { all, call, put, take } from 'redux-saga/effects';
+import { combineReducers } from 'redux'
+import { connect } from 'react-redux'
+import { all, call, put, take } from 'redux-saga/effects'
 
-// Material-Ui components.
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
+// Material-UI components.
+import Typography from '@material-ui/core/Typography'
+import Avatar from '@material-ui/core/Avatar'
 
 // Material-UI list components.
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 
 // Material-UI styling.
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
 
 // Top5 Radio.
-import { fetchJson } from './utils';
+import { fetchJson } from './utils'
 
 
 // Redux and Sagas.
@@ -33,10 +33,12 @@ const clearState = () => (
     {type: 'resultspage/CLEAR_STATE'}
 )
 
+
 const state0 = {
     top5List: [],
     usersList: []
 }
+
 
 export const resultsPageReducer = combineReducers({
     top5List: (state = state0.top5List, action) => {
@@ -70,6 +72,7 @@ const getResultsSaga = function* () {
     }
 
     while (true) {
+        // TODO: Treat possible errors returned from server request.
         yield take('resultspage/GET_RESULTS.BEGIN')
 
         const data = yield call(getResults)
@@ -97,21 +100,16 @@ const sheet = theme => ({
         '& .music-name': {
             width: 100,
         },
-        '& .votes': {
-            textAlign: 'right'
-        },
         '& .avatar': {
-            width: theme.spacing(3),
-            height: theme.spacing(3),
-            fontSize: 12,
+            width: theme.spacing(4),
+            height: theme.spacing(4),
+            fontSize: 14,
+            backgroundColor: '#0d47a1'
         },
     },
     'users-list': {
         '& .user': {
             width: 100,
-        },
-        '& .count': {
-            textAlign: 'right'
         },
     }
 })
@@ -142,7 +140,7 @@ export class ResultsPage extends React.Component {
                                 <ListItem key={ index }>
                                     <ListItemAvatar>
                                         <Avatar className="avatar" variant="rounded">
-                                            { index }º
+                                            { index + 1 }º
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText className="music-name"  primary={ name } secondary={ artists } />

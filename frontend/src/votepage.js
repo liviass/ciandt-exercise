@@ -1,53 +1,48 @@
 // Formulário de votação do Top5.
 
 // React.
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import React from 'react'
+import { Redirect } from 'react-router-dom'
 
 // Redux and sagas.
-import { combineReducers } from 'redux';
-import { connect } from 'react-redux';
-import { all, call, put, take } from 'redux-saga/effects';
+import { combineReducers } from 'redux'
+import { connect } from 'react-redux'
+import { all, call, put, take } from 'redux-saga/effects'
 
 // Material-UI components.
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Button from '@material-ui/core/Button'
 
 // Material-UI styling.
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
 
 // Top5 Radio.
-import { fetchJson } from './utils';
-import ListItemText from '@material-ui/core/ListItemText';
+import { fetchJson } from './utils'
+import ListItemText from '@material-ui/core/ListItemText'
+
 
 // Redux and Sagas.
 const setNickname = value => (
     {type: 'votepage/SET_NICKNAME', value}
 )
-
 const setSong = (position, value) => (
     {type: 'votepage/SET_SONG', position, value}
 )
-
 const selectSong = (position, value) => (
     {type: 'votepage/SELECT_SONG', position, value}
 )
-
 const getSongs = () => (
     {type: 'votepage/GET_SONGS.BEGIN'}
 )
-
 const sendTop5 = data => (
     {type: 'votepage/SEND_TOP5', data}
 )
-
 const navHomepage = () => (
     {type: 'votepage/REDIRECT_TO_HOMEPAGE'}
 )
-
 const clearState = () => (
     {type: 'votepage/CLEAR_STATE'}
 )
@@ -151,12 +146,14 @@ const sendTop5Saga = function* () {
     }
 }
 
+
 export const rootSaga = function* () {
     yield all([
         getSongsSaga(),
         sendTop5Saga()
     ])
 }
+
 
 // Style.
 const sheet = theme => ({
@@ -182,7 +179,6 @@ const sheet = theme => ({
     'send-button': {
         float: 'right'
     }
-
 })
 
 
@@ -240,6 +236,7 @@ export class VotePage extends React.Component {
         )
     }
 }
+
 
 VotePage = connect(
     state => state.votepage,

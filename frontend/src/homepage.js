@@ -1,16 +1,17 @@
 // Tela inicial.
 
 // React.
-import React from 'react';
+import React from 'react'
 
 // Material-Ui components.
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 
 // Material-UI styling.
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
 
 // Top5 Radio.
 import { ButtonLink } from './utils'
+
 
 // Style.
 const sheet = theme => ({
@@ -24,8 +25,9 @@ const sheet = theme => ({
         left: '50%',
         transform: 'translate(-50%, -50%)',
         textAlign: 'center'
-      }
+    }
 })
+
 
 // Components.
 class HomePage extends React.Component {
@@ -48,4 +50,4 @@ class HomePage extends React.Component {
 
 HomePage = withStyles(sheet, {withTheme: true})(HomePage)
 
-export default HomePage;
+export default HomePage

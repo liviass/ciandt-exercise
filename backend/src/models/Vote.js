@@ -1,5 +1,3 @@
-// Models.
-
 const mongoose = require('mongoose')
 
 const VoteSchema = new mongoose.Schema({

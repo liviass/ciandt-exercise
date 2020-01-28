@@ -1,30 +1,30 @@
 // React.
-import React from 'react';
-import { combineReducers } from 'redux';
+import React from 'react'
+import { combineReducers } from 'redux'
 
 // Redux and sagas.
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
 // Material-UI components.
-import AppBarMUI from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
+import AppBarMUI from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 
 // List
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
+import List from '@material-ui/core/List'
+import Divider from '@material-ui/core/Divider'
+import ListItem from '@material-ui/core/ListItem'
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
 
 // Material-UI icons.
-import MenuIcon from '@material-ui/icons/Menu';
-import RadioIcon from '@material-ui/icons/Radio';
+import MenuIcon from '@material-ui/icons/Menu'
+import RadioIcon from '@material-ui/icons/Radio'
 
 // Material-UI styling.
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
 
 // Top5 Radio.
 import { ButtonLink } from './utils'
@@ -34,19 +34,15 @@ import { ButtonLink } from './utils'
 const openDrawer = () => (
     {type: 'appbar/OPEN_DRAWER'}
 )
-
 const closeDrawer = () => (
     {type: 'appbar/CLOSE_DRAWER'}
 )
-
 const showMessage= ()  => (
     {type: 'appbar/SHOW_MESSAGE'}
 )
-
 const hideMessage = ()  => (
     {type: 'appbar/HIDE_MESSAGE'}
 )
-
 const clearState = () => (
     {type: 'appbar/CLEAR_STATE'}
 )
@@ -138,37 +134,37 @@ export class AppBar extends React.Component {
                             <ListItem button component="a" key="reactjs" href="https://reactjs.org/docs" target="_blank">
                                 React JS
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://reacttraining.com/react-router/" target="_blank">
+                            <ListItem button component="a" key="react-router" href="https://reacttraining.com/react-router/" target="_blank">
                                 React Router
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://redux.js.org/" target="_blank">
+                            <ListItem button component="a" key="redux" href="https://redux.js.org/" target="_blank">
                                 Redux
                             </ListItem>
                             <ListItem button component="a" key="materialui" href="https://material-ui.com" target="_blank">
                                 Material UI
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://webpack.js.org/" target="_blank">
+                            <ListItem button component="a" key="webpack" href="https://webpack.js.org/" target="_blank">
                                 Webpack
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://nodejs.org" target="_blank">
+                            <ListItem button component="a" key="nodejs" href="https://nodejs.org" target="_blank">
                                 Node.js
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://expressjs.com" target="_blank">
+                            <ListItem button component="a" key="express" href="https://expressjs.com" target="_blank">
                                 Express
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://expressjs.com/en/resources/middleware/cors.html" target="_blank">
+                            <ListItem button component="a" key="express-cors" href="https://expressjs.com/en/resources/middleware/cors.html" target="_blank">
                                 Express Cors
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://www.mongodb.com/cloud" target="_blank">
+                            <ListItem button component="a" key="mongodb" href="https://www.mongodb.com/cloud" target="_blank">
                                 MongoDB
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://mongoosejs.com/docs/" target="_blank">
+                            <ListItem button component="a" key="mongoose" href="https://mongoosejs.com/docs/" target="_blank">
                                 Mongoose
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://docs.docker.com/" target="_blank">
+                            <ListItem button component="a" key="docker" href="https://docs.docker.com/" target="_blank">
                                 Docker
                             </ListItem>
-                            <ListItem button component="a" key="materialui" href="https://docs.docker.com/compose/" target="_blank">
+                            <ListItem button component="a" key="docker-compose" href="https://docs.docker.com/compose/" target="_blank">
                                 Docker Compose
                             </ListItem>
                         </List>
@@ -201,7 +197,7 @@ AppBar = connect(
 
         openDrawer() {
             if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-                return;
+                return
             }
 
             dispatch(openDrawer())
@@ -209,7 +205,7 @@ AppBar = connect(
 
         closeDrawer() {
             if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-                return;
+                return
             }
 
             dispatch(closeDrawer())
