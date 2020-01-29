@@ -33,7 +33,5 @@ services:
       dockerfile: frontend.dockerfile
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/home/src/top5_radio/:rw
     ports:
       - 8080:8080
